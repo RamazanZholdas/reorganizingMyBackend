@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -84,4 +85,12 @@ func (m *MongoDB) InsertMany(collectionName string, data []interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func (m *MongoDB) CountProducts(collectionName string) (int64, error) {
+	count, err := m.Db.Collection(collectionName).CountDocuments(context.TODO(), bson.M{})
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
