@@ -6,24 +6,18 @@ import (
 	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (m *MongoDB) CreateCollections(collections []string) []error {
-	var errs []error
-	for _, collectionName := range collections {
-		_, err := m.Db.Collection(collectionName).Indexes().CreateOne(context.TODO(), mongo.IndexModel{})
-		if err != nil {
-			if strings.Contains(err.Error(), "already exists") {
-				errs = append(errs, fmt.Errorf("%s collection already exists", collectionName))
-				continue
-			} else {
-				errs = append(errs, err)
-				break
-			}
+func (m *MongoDB) CreateCollection(collectionName string) error {
+	err := m.Db.CreateCollection(context.TODO(), collectionName)
+	if err != nil {
+		if strings.Contains(err.Error(), "already exists") {
+			return fmt.Errorf("%s collection already exists", collectionName)
+		} else {
+			return err
 		}
 	}
-	return errs
+	return nil
 }
 
 func (m *MongoDB) FindOne(collectionName string, filter interface{}, result interface{}) error {

@@ -1,13 +1,21 @@
-package app
+package routes
 
 import (
+	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/authorization"
+	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/product"
 	"github.com/gofiber/fiber/v2"
 )
 
 func Setup(app *fiber.App) {
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	//authorization
+	app.Post("/register", authorization.Register)
+	app.Post("/login", authorization.Login)
+	app.Post("/logout", authorization.Logout)
+
+	//products
+	app.Get("/getAllProducts", product.GetAllProducts)
+	app.Get("/getProduct/:order", product.GetProduct)
+	app.Post("/insertProduct", product.InsertProduct)
 }
 
 /*

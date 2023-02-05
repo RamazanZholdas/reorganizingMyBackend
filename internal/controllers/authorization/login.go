@@ -24,7 +24,6 @@ func Login(c *fiber.Ctx) error {
 	var user bson.M
 
 	err := app.GetMongoInstance().FindOne(os.Getenv("COLLECTION_USERS"), filter, &user)
-
 	if err != nil {
 		return c.Status(401).JSON(fiber.Map{
 			"message": "User not found",
@@ -43,7 +42,9 @@ func Login(c *fiber.Ctx) error {
 
 	token, err := jwt.NewJwtTokenWithClaims(email)
 	if err != nil {
-		return err
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Internal server error",
+		})
 	}
 
 	cookie := fiber.Cookie{
@@ -58,6 +59,4 @@ func Login(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "success",
 	})
-
-	return c.SendString("Login")
 }

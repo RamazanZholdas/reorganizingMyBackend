@@ -1,8 +1,10 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/RamazanZholdas/KeyboardistSV2/pkg/database"
 	"github.com/gofiber/fiber/v2"
@@ -15,7 +17,16 @@ type App struct {
 }
 
 var (
-	allCollections = []string{
+	MongoInstance = &database.MongoDB{}
+)
+
+func New(mongoURI, dbName string) (*App, error) {
+	err := MongoInstance.Connect(mongoURI, dbName)
+	if err != nil {
+		return nil, fmt.Errorf("error connecting to MongoDB: %v", err)
+	}
+
+	var allCollections = []string{
 		os.Getenv("COLLECTION_USERS"),
 		os.Getenv("COLLECTION_PRODUCTS"),
 		os.Getenv("COLLECTION_NEWS"),
@@ -23,25 +34,15 @@ var (
 		os.Getenv("COLLECTION_SERVICE_MASTERS"),
 		os.Getenv("COLLECTION_PURCHASE_HISTORY"),
 	}
-	MongoInstance = &database.MongoDB{}
-)
 
-func New(mongoURI, dbName string) *App {
-	err := MongoInstance.Connect(mongoURI, dbName)
-	if err != nil {
-		log.Fatalln("Error connecting to MongoDB:", err)
-	} else if err.Error() != "database already exists" {
-		log.Println("Database aleady exists")
-	}
-
-	errors := MongoInstance.CreateCollections(allCollections)
-	if len(errors) > 0 {
-		for _, err := range errors {
-			if err.Error() != "collection already exists" {
-				log.Fatalln("Error creating collection:", err)
+	for _, collectionName := range allCollections {
+		err := MongoInstance.CreateCollection(collectionName)
+		if err != nil {
+			if !strings.Contains(err.Error(), "already exists") {
+				return nil, fmt.Errorf("error creating collection: %v", err)
 			}
+			log.Println("We have some collections that already exists: ", err)
 		}
-		log.Println("We have some collections that already exists: ", errors)
 	}
 
 	fiber := fiber.New()
@@ -54,11 +55,9 @@ func New(mongoURI, dbName string) *App {
 		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
 	}))
 
-	Setup(fiber)
-
 	return &App{
 		Fiber: fiber,
-	}
+	}, nil
 }
 
 func (a *App) Close() {

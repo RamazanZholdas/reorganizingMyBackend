@@ -2,7 +2,9 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -17,12 +19,12 @@ type MongoDB struct {
 func (m *MongoDB) Connect(uri, database string) error {
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
-		return err
+		return fmt.Errorf("error creating new MongoDB client: %v", err)
 	}
 
 	err = client.Connect(context.TODO())
 	if err != nil {
-		return err
+		return fmt.Errorf("error connecting to MongoDB: %v", err)
 	}
 
 	m.Client = client
@@ -30,10 +32,13 @@ func (m *MongoDB) Connect(uri, database string) error {
 
 	err = m.Db.RunCommand(context.TODO(), bson.D{{Key: "create", Value: database}}).Err()
 	if err != nil {
-		if err.Error() != "database already exists" {
-			return err
+		if strings.Contains(err.Error(), "already exists") {
+			log.Println("warning: database already exists")
+		} else {
+			return fmt.Errorf("error creating database: %v", err)
 		}
 	}
+
 	return nil
 }
 
