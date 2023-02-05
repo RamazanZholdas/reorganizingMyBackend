@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/RamazanZholdas/KeyboardistSV2/pkg/database"
 	"github.com/gofiber/fiber/v2"
@@ -45,6 +46,12 @@ func New(mongoURI, dbName string) (*App, error) {
 		}
 	}
 
+	file, err := os.OpenFile("./Output.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer file.Close()
+
 	fiber := fiber.New()
 
 	fiber.Use(cors.New(cors.Config{
@@ -52,7 +59,10 @@ func New(mongoURI, dbName string) (*App, error) {
 	}))
 
 	fiber.Use(logger.New(logger.Config{
-		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+		Format:     "[${ip}]:${port} ${status} - ${method} ${path}\n",
+		Output:     file,
+		TimeFormat: time.RFC3339Nano,
+		TimeZone:   "Local",
 	}))
 
 	return &App{
