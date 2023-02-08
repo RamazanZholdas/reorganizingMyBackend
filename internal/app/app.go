@@ -21,7 +21,7 @@ var (
 	MongoInstance = &database.MongoDB{}
 )
 
-func New(mongoURI, dbName string) (*App, error) {
+func Intitialize(mongoURI, dbName string) (*App, error) {
 	err := MongoInstance.Connect(mongoURI, dbName)
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to MongoDB: %v", err)
@@ -46,7 +46,7 @@ func New(mongoURI, dbName string) (*App, error) {
 		}
 	}
 
-	file, err := os.OpenFile("./Output.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	file, err := os.OpenFile("./../../logs/FiberLogs.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
