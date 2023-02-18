@@ -19,13 +19,13 @@ type App struct {
 }
 
 var (
-	MongoInstance = &database.MongoDB{}
+	mongoInstance = &database.MongoDB{}
 )
 
 func Intitialize(mongoURI, dbName string) (*App, error) {
 	utils.CreateLogFiles()
 
-	err := MongoInstance.Connect(mongoURI, dbName)
+	err := mongoInstance.Connect(mongoURI, dbName)
 	if err != nil {
 		utils.LogError("Error connecting to MongoDB: ", err)
 		return nil, fmt.Errorf("error connecting to MongoDB: %v", err)
@@ -47,7 +47,7 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 	for _, collectionName := range allCollections {
 		go func(name string) {
 			defer wg.Done()
-			err := MongoInstance.CreateCollection(name)
+			err := mongoInstance.CreateCollection(name)
 			if err != nil {
 				if !strings.Contains(err.Error(), "already exists") {
 					errors <- fmt.Errorf("error creating collection %s: %v", name, err)
@@ -94,12 +94,19 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 }
 
 func (a *App) Close() {
-	MongoInstance.Disconnect()
+	mongoInstance.Disconnect()
 	a.Fiber.Shutdown()
 	utils.LogInfo("Closing app")
 	utils.CloseLogFiles()
 }
 
 func GetMongoInstance() *database.MongoDB {
-	return MongoInstance
+	return mongoInstance
+}
+
+func (a *App) MakeBackup() error {
+	utils.LogInfo("Making backup...")
+	err := database.CopyDatabase(mongoInstance.Client, os.Getenv("DATABASE_NAME"), os.Getenv("DATABASE_NAME")+"-backup")
+	utils.LogInfo("Backup complete")
+	return err
 }

@@ -30,6 +30,16 @@ func main() {
 	signal.Notify(c, os.Interrupt)
 	go func() {
 		<-c
+		fmt.Println("Do you want to make a backup of the database before shutting down? (y/n)")
+		var input string
+		fmt.Scanln(&input)
+		if input == "y" || input == "Y" {
+			if err := app.MakeBackup(); err != nil {
+				fmt.Println("Error backing up database:", err)
+			} else {
+				fmt.Println("Database backed up successfully!")
+			}
+		}
 		fmt.Println("Gracefully shutting down...")
 		app.Close()
 	}()
