@@ -1,2 +1,3 @@
 run:
-	go run ./cmd/server/main.go
+	cd ./cmd/server/
+	go run main.go

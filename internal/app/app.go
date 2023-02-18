@@ -2,12 +2,13 @@ package app
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/RamazanZholdas/KeyboardistSV2/pkg/database"
+	"github.com/RamazanZholdas/KeyboardistSV2/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -22,8 +23,11 @@ var (
 )
 
 func Intitialize(mongoURI, dbName string) (*App, error) {
+	utils.CreateLogFiles()
+
 	err := MongoInstance.Connect(mongoURI, dbName)
 	if err != nil {
+		utils.LogError("Error connecting to MongoDB: ", err)
 		return nil, fmt.Errorf("error connecting to MongoDB: %v", err)
 	}
 
@@ -36,19 +40,38 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 		os.Getenv("COLLECTION_PURCHASE_HISTORY"),
 	}
 
+	var wg sync.WaitGroup
+	wg.Add(len(allCollections))
+	errors := make(chan error, len(allCollections))
+
 	for _, collectionName := range allCollections {
-		err := MongoInstance.CreateCollection(collectionName)
-		if err != nil {
-			if !strings.Contains(err.Error(), "already exists") {
-				return nil, fmt.Errorf("error creating collection: %v", err)
+		go func(name string) {
+			defer wg.Done()
+			err := MongoInstance.CreateCollection(name)
+			if err != nil {
+				if !strings.Contains(err.Error(), "already exists") {
+					errors <- fmt.Errorf("error creating collection %s: %v", name, err)
+				} else {
+					utils.LogWarning("Collection %s already exists", name)
+				}
 			}
-			log.Println("We have some collections that already exists: ", err)
-		}
+		}(collectionName)
+	}
+
+	go func() {
+		wg.Wait()
+		close(errors)
+	}()
+
+	for err := range errors {
+		utils.LogError(err)
+		return nil, err
 	}
 
 	file, err := os.OpenFile("./../../logs/FiberLogs.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		log.Fatalf("error opening file: %v", err)
+		utils.LogError("Error opening fiberlog file: ", err)
+		return nil, fmt.Errorf("error opening fiberlog file: %v", err)
 	}
 	defer file.Close()
 
@@ -73,6 +96,8 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 func (a *App) Close() {
 	MongoInstance.Disconnect()
 	a.Fiber.Shutdown()
+	utils.LogInfo("Closing app")
+	utils.CloseLogFiles()
 }
 
 func GetMongoInstance() *database.MongoDB {

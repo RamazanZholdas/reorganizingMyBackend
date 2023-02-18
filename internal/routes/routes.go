@@ -16,6 +16,7 @@ func Setup(app *fiber.App) {
 	app.Get("/getAllProducts", product.GetAllProducts)
 	app.Get("/getProduct/:order", product.GetProduct)
 	app.Post("/insertProduct", product.InsertProduct)
+
 }
 
 /*
