@@ -17,7 +17,7 @@ func InsertProduct(c *fiber.Ctx) error {
 		})
 	}
 
-	count, err := app.GetMongoInstance().CountProducts(os.Getenv("COLLECTION_PRODUCTS"))
+	count, err := app.GetMongoInstance().CountDocuments(os.Getenv("COLLECTION_PRODUCTS"))
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"message": "Internal server error",

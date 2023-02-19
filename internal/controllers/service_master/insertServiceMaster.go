@@ -1,4 +1,4 @@
-package news
+package servicemaster
 
 import (
 	"os"
@@ -8,16 +8,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func AddNews(c *fiber.Ctx) error {
-	var news models.News
+func InsertServiceMaster(c *fiber.Ctx) error {
+	var service_master models.ServiceMaster
 
-	if err := c.BodyParser(&news); err != nil {
+	if err := c.BodyParser(&service_master); err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "Bad Request",
 		})
 	}
 
-	count, err := app.GetMongoInstance().CountDocuments(os.Getenv("COLLECTION_NEWS"))
+	count, err := app.GetMongoInstance().CountDocuments(os.Getenv("COLLECTION_SERVICE_MASTERS"))
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"message": "Internal server error",
@@ -25,14 +25,14 @@ func AddNews(c *fiber.Ctx) error {
 	}
 	count++
 
-	news.Order = int32(count)
+	service_master.Order = int32(count)
 
-	insertErr := app.GetMongoInstance().InsertOne(os.Getenv("COLLECTION_NEWS"), news)
+	insertErr := app.GetMongoInstance().InsertOne(os.Getenv("COLLECTION_SERVICE_MASTERS"), service_master)
 	if insertErr != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"message": "Internal server error",
 		})
 	}
 
-	return c.JSON(news)
+	return c.JSON(service_master)
 }

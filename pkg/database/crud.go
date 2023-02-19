@@ -89,7 +89,7 @@ func (m *MongoDB) InsertMany(collectionName string, data []interface{}) error {
 	return nil
 }
 
-func (m *MongoDB) CountProducts(collectionName string) (int64, error) {
+func (m *MongoDB) CountDocuments(collectionName string) (int64, error) {
 	count, err := m.Db.Collection(collectionName).CountDocuments(context.TODO(), bson.M{})
 	if err != nil {
 		utils.LogError(fmt.Sprintf("Error counting documents in %s, Error: ", collectionName), err)

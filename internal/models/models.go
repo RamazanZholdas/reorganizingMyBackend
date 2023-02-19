@@ -32,6 +32,7 @@ type News struct {
 
 type ServiceMaster struct {
 	ID       primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Order    int32              `bson:"order,omitempty" json:"order"`
 	FullName string             `bson:"full_name,omitempty" json:"full_name"`
 	Phone    string             `bson:"phone,omitempty" json:"phone"`
 	Address  string             `bson:"address,omitempty" json:"address"`
