@@ -23,6 +23,7 @@ func init() {
 }
 
 func main() {
+
 	app, err := app.Intitialize(os.Getenv("MONGO_URI"), os.Getenv("DATABASE_NAME"))
 	if err != nil {
 		log.Panic(err)
@@ -41,7 +42,7 @@ func main() {
 		answer, _ := reader.ReadString('\n')
 		answer = strings.TrimSpace(answer)
 		if strings.ToLower(answer) == "y" {
-			err := exec.Command("sh", "scripts/createMongoDbDump.sh").Run()
+			err := exec.Command("sh", "../../scripts/createMongoDbDump.sh").Run()
 			if err != nil {
 				utils.LogError(fmt.Sprintf("Error creating backup: %v", err))
 			} else {
