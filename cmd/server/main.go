@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"os/signal"
+	"strings"
 
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/app"
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/routes"
@@ -31,6 +35,20 @@ func main() {
 	go func() {
 		<-c
 		utils.LogInfo("Shutting down server...")
+
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Do you want to create a backup of the database? (y/n): ")
+		answer, _ := reader.ReadString('\n')
+		answer = strings.TrimSpace(answer)
+		if strings.ToLower(answer) == "y" {
+			err := exec.Command("sh", "scripts/createMongoDbDump.sh").Run()
+			if err != nil {
+				utils.LogError(fmt.Sprintf("Error creating backup: %v", err))
+			} else {
+				utils.LogInfo("Backup created successfully")
+			}
+		}
+
 		app.Close()
 	}()
 
