@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -15,25 +16,24 @@ var (
 )
 
 func CreateLogFiles() {
-	now := time.Now().Format("2006-01-02_15-04-05")
 	logPath := "./../../logs/"
 	if _, err := os.Stat(logPath); os.IsNotExist(err) {
 		os.Mkdir(logPath, os.ModePerm)
 	}
 
-	infoLogFile, err := createLogFile(filepath.Join(logPath, "info_"+now+".log"))
+	infoLogFile, err := createLogFile(filepath.Join(logPath, "info.log"))
 	if err != nil {
 		log.Fatalln("Failed to open info log file:", err)
 	}
 	infoLogger = log.New(io.MultiWriter(os.Stdout, infoLogFile), "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	warningLogFile, err := createLogFile(filepath.Join(logPath, "warning_"+now+".log"))
+	warningLogFile, err := createLogFile(filepath.Join(logPath, "warning.log"))
 	if err != nil {
 		log.Fatalln("Failed to open warning log file:", err)
 	}
 	warningLogger = log.New(io.MultiWriter(os.Stdout, warningLogFile), "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
 
-	errorLogFile, err := createLogFile(filepath.Join(logPath, "error_"+now+".log"))
+	errorLogFile, err := createLogFile(filepath.Join(logPath, "error.log"))
 	if err != nil {
 		log.Fatalln("Failed to open error log file:", err)
 	}
@@ -74,5 +74,12 @@ func createLogFile(filePath string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	now := time.Now().Format(time.RFC3339)
+
+	if _, err := file.WriteString(fmt.Sprintf("\nNew session started at: %s\n", now)); err != nil {
+		return nil, err
+	}
+
 	return file, nil
 }

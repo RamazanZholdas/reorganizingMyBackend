@@ -37,7 +37,7 @@ func (m *MongoDB) Connect(uri, database string) error {
 	m.Client = client
 	m.Db = client.Database(database)
 
-	databases, err := m.Client.ListDatabaseNames(context.Background(), nil)
+	databases, err := m.Client.ListDatabaseNames(context.Background(), bson.M{})
 	if err != nil {
 		utils.LogError("Failed to list database names: ", err)
 		return ErrCreateDatabase

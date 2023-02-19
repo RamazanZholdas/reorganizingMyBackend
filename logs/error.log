@@ -1,0 +1,30 @@
+
+New session started at: 2023-02-19T13:10:28+06:00
+ERROR: 2023/02/19 13:10:33 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:10:50+06:00
+ERROR: 2023/02/19 13:10:52 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:14:38+06:00
+ERROR: 2023/02/19 13:14:40 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:15:21+06:00
+ERROR: 2023/02/19 13:15:23 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:15:44+06:00
+ERROR: 2023/02/19 13:15:46 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:16:26+06:00
+ERROR: 2023/02/19 13:16:28 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:16:46+06:00
+ERROR: 2023/02/19 13:16:48 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:22:39+06:00
+ERROR: 2023/02/19 13:23:09 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:24:23+06:00
+ERROR: 2023/02/19 13:24:28 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-19T13:27:36+06:00
+ERROR: 2023/02/19 13:27:39 logging.go:52: Error backing up database: must provide at least one element in input slice

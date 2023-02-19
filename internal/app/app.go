@@ -52,7 +52,7 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 				if !strings.Contains(err.Error(), "already exists") {
 					errors <- fmt.Errorf("error creating collection %s: %v", name, err)
 				} else {
-					utils.LogWarning("Collection %s already exists", name)
+					utils.LogWarning(fmt.Sprintf("Collection %s already exists", name))
 				}
 			}
 		}(collectionName)
@@ -102,11 +102,4 @@ func (a *App) Close() {
 
 func GetMongoInstance() *database.MongoDB {
 	return mongoInstance
-}
-
-func (a *App) MakeBackup() error {
-	utils.LogInfo("Making backup...")
-	err := database.CopyDatabase(mongoInstance.Client, os.Getenv("DATABASE_NAME"), os.Getenv("DATABASE_NAME")+"-backup")
-	utils.LogInfo("Backup complete")
-	return err
 }
