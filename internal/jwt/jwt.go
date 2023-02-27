@@ -14,7 +14,7 @@ func NewJwtTokenWithClaims(email string) (string, error) {
 		ExpiresAt: &jwt.Time{Time: time.Now().Add(time.Hour * 24)},
 	})
 
-	token, err := claims.SignedString(os.Getenv("SECRET_KEY"))
+	token, err := claims.SignedString([]byte(os.Getenv("SECRET_KEY")))
 	if err != nil {
 		utils.LogError("Error signing token: ", err)
 		return "", err

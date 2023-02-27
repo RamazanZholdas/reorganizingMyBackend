@@ -7,6 +7,7 @@ import (
 
 	"github.com/RamazanZholdas/KeyboardistSV2/utils"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (m *MongoDB) CreateCollection(collectionName string) error {
@@ -30,21 +31,23 @@ func (m *MongoDB) FindOne(collectionName string, filter interface{}, result inte
 	return nil
 }
 
-func (m *MongoDB) FindMany(collectionName string, filter interface{}, results interface{}) error {
+func (m *MongoDB) FindMany(collectionName string, filter interface{}, results *[]primitive.M) error {
 	cur, err := m.Db.Collection(collectionName).Find(context.TODO(), filter)
 	if err != nil {
 		utils.LogError(fmt.Sprintf("Error finding many documents in %s using this filter %s, Error: ", collectionName, filter), err)
 		return err
 	}
 	defer cur.Close(context.TODO())
+
 	for cur.Next(context.TODO()) {
-		var elem interface{}
+		var elem primitive.M
 		if err := cur.Decode(&elem); err != nil {
 			utils.LogError(fmt.Sprintf("Error decoding document in %s using this filter %s, Error: ", collectionName, filter), err)
 			return err
 		}
-		results = append(results.([]interface{}), elem)
+		*results = append(*results, elem)
 	}
+
 	if err := cur.Err(); err != nil {
 		return err
 	}

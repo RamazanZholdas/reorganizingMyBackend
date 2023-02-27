@@ -28,3 +28,32 @@ ERROR: 2023/02/19 13:24:28 logging.go:52: Error backing up database: must provid
 
 New session started at: 2023-02-19T13:27:36+06:00
 ERROR: 2023/02/19 13:27:39 logging.go:52: Error backing up database: must provide at least one element in input slice
+
+New session started at: 2023-02-27T19:02:10+06:00
+
+New session started at: 2023-02-27T19:10:10+06:00
+
+New session started at: 2023-02-27T19:10:25+06:00
+
+New session started at: 2023-02-27T19:14:05+06:00
+
+New session started at: 2023-02-27T19:16:35+06:00
+ERROR: 2023/02/27 19:17:00 logging.go:52: Error signing token:  key is of invalid type: expected []byte, received string
+ERROR: 2023/02/27 19:18:20 logging.go:52: Error signing token:  key is of invalid type: expected []byte, received string
+ERROR: 2023/02/27 19:19:09 logging.go:52: Error signing token:  key is of invalid type: expected []byte, received string
+
+New session started at: 2023-02-27T19:21:27+06:00
+
+New session started at: 2023-02-27T19:37:33+06:00
+
+New session started at: 2023-02-27T19:38:39+06:00
+
+New session started at: 2023-02-27T19:39:15+06:00
+
+New session started at: 2023-02-27T19:47:58+06:00
+
+New session started at: 2023-02-27T20:00:29+06:00
+ERROR: 2023/02/27 20:11:34 logging.go:52: Error finding one document in products using this filter map[order:1], Error:  mongo: no documents in result
+ERROR: 2023/02/27 20:12:38 logging.go:52: Error finding one document in products using this filter map[order:1], Error:  mongo: no documents in result
+
+New session started at: 2023-02-27T20:27:38+06:00

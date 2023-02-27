@@ -2,7 +2,10 @@ package routes
 
 import (
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/authorization"
+	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/cart"
+	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/news"
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/product"
+	servicemaster "github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/service_master"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -13,23 +16,21 @@ func Setup(app *fiber.App) {
 	app.Post("/logout", authorization.Logout)
 
 	//products
-	app.Get("/getAllProducts", product.GetAllProducts)
+	app.Get("/getAllItems", product.GetAllProducts)
 	app.Get("/getProduct/:order", product.GetProduct)
 	app.Post("/insertProduct", product.InsertProduct)
 
-}
+	//cart
+	app.Get("/getCart", cart.GetAllFromUsersCart)
+	app.Post("/addToCart/:order", cart.InsertToCart)
 
-/*
-	app.Post("/register", controllers.Register)
-	app.Post("/login", controllers.Login)
-	app.Get("/user", controllers.User)
-	app.Post("/logout", controllers.Logout)
-	app.Get("/getAllItems", controllers.GetAllItems)
-	app.Post("/insertProduct", controllers.InsertProduct)
-	app.Post("/addToCart/:order", controllers.AddToCart)
-	app.Get("/getCart", controllers.GetAllFromCart)
-	app.Get("/getKeyboard/:order", controllers.GetKeyboard)
-	app.Get("/getNews", controllers.GetNews)
-	app.Get("/getNews/:order", controllers.GetNewsById)
-	app.Post("/addNews", controllers.AddNews)
-*/
+	//news
+	app.Get("/getNews", news.GetAllNews)
+	app.Get("/getNews/:order", news.GetNews)
+	app.Post("/addNews", news.InsertNews)
+
+	//service_master
+	app.Get("/getAllServiceMasters", servicemaster.GetAllServiceMasters)
+	app.Get("/getServiceMaster/:order", servicemaster.GetServiceMaster)
+	app.Post("/insertServiceMaster", servicemaster.InsertServiceMaster)
+}

@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/app"
@@ -30,7 +31,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	password := user["password"].([]byte)
+	password := user["password"].(primitive.Binary).Data
 
 	if err := bcrypt.CompareHashAndPassword(password, []byte(data["password"])); err != nil {
 		return c.Status(401).JSON(fiber.Map{

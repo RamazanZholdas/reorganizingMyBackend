@@ -20,6 +20,7 @@ type App struct {
 
 var (
 	mongoInstance = &database.MongoDB{}
+	fiberLogFile  *os.File
 )
 
 func Intitialize(mongoURI, dbName string) (*App, error) {
@@ -68,12 +69,11 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 		return nil, err
 	}
 
-	file, err := os.OpenFile("./../../logs/FiberLogs.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	fiberLogFile, err = os.OpenFile("./../../logs/FiberLogs.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		utils.LogError("Error opening fiberlog file: ", err)
 		return nil, fmt.Errorf("error opening fiberlog file: %v", err)
 	}
-	defer file.Close()
 
 	fiber := fiber.New()
 
@@ -83,7 +83,7 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 
 	fiber.Use(logger.New(logger.Config{
 		Format:     "[${ip}]:${port} ${status} - ${method} ${path}\n",
-		Output:     file,
+		Output:     fiberLogFile,
 		TimeFormat: time.RFC3339Nano,
 		TimeZone:   "Local",
 	}))
@@ -96,6 +96,7 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 func (a *App) Close() {
 	mongoInstance.Disconnect()
 	a.Fiber.Shutdown()
+	fiberLogFile.Close()
 	utils.LogInfo("Closing app")
 	utils.CloseLogFiles()
 }

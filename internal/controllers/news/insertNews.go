@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func AddNews(c *fiber.Ctx) error {
+func InsertNews(c *fiber.Ctx) error {
 	var news models.News
 
 	if err := c.BodyParser(&news); err != nil {
