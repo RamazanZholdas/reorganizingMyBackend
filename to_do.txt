@@ -1,0 +1,88 @@
+1. Get request:  /getProduct/:order 
+Example: http://localhost:8000/getProduct/1 Response: json
+{
+    "order": 1,
+    "name": "Product B",
+    "brand": "Brand B",
+    "description": "This is a sample 2 product.",
+    "images": [
+        "https://m.media-amazon.com/images/I/71-ZP9hUVVL._AC_SY355_.jpg"
+    ],
+    "product_type": "Type B",
+    "options": [
+        {
+            "optionId":"1",
+            "price":"23",
+            "inStock":"2",
+            "option":"red"
+        },
+        {
+            "optionId":"2",
+            "price":"43",
+            "inStock":"1",
+            "option":"orange"
+        }
+    ]
+}
+
+ 2. Post request: /addToCart/:order
+ Example:  http://localhost:8000/addToCart/1
+ Json body: 
+ {
+    optionId: 1
+ }
+  Response:
+  json: {"message": "Product added to cart"}
+  changes in db: 
+
+{
+   **user info**
+    cart: [
+     1:"order": 1,
+    "name": "Product B",
+    "brand": "Brand B",
+    "description": "This is a sample 2 product.",
+    "images": [
+        "https://m.media-amazon.com/images/I/71-ZP9hUVVL._AC_SY355_.jpg"
+    ],
+    "product_type": "Type B",
+    "options": [
+        {
+            "optionId":"1",
+            "price":"23",
+            "inStock":"2",
+            "option":"red"
+        },
+        {
+            "optionId":"2",
+            "price":"43",
+            "inStock":"1",
+            "option":"orange"
+        }
+    ]
+]
+}
+
+options: [
+    {
+        1:nil
+        product: {
+    "order": 1,
+    "name": "Product B",
+    "brand": "Brand B",
+    "description": "This is a sample 2 product.",
+    "images": [
+        "https://m.media-amazon.com/images/I/71-ZP9hUVVL._AC_SY355_.jpg"
+    ],
+    "product_type": "Type B",
+    "options": [
+        {
+            "optionId":"1",
+            "price":"23",
+            "inStock":"2",
+            "option":"red"
+        },
+    ]
+}
+    }
+]

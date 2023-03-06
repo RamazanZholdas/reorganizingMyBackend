@@ -3,11 +3,11 @@ package models
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type User struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Username string             `bson:"username,omitempty" json:"username"`
-	Email    string             `bson:"email,omitempty" json:"email"`
-	Password []byte             `bson:"password,omitempty" json:"-"`
-	Cart     primitive.A        `bson:"cart,omitempty" json:"cart"`
+	ID       primitive.ObjectID   `bson:"_id,omitempty" json:"id"`
+	Username string               `bson:"username,omitempty" json:"username"`
+	Email    string               `bson:"email,omitempty" json:"email"`
+	Password []byte               `bson:"password,omitempty" json:"-"`
+	Cart     []map[string]Product `bson:"cart,omitempty" json:"cart"`
 }
 
 type Product struct {
