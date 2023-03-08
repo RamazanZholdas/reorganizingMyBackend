@@ -14,6 +14,7 @@ func Setup(app *fiber.App) {
 	app.Post("/register", authorization.Register)
 	app.Post("/login", authorization.Login)
 	app.Post("/logout", authorization.Logout)
+	app.Post("/user", authorization.User)
 
 	//products
 	app.Get("/getAllItems", product.GetAllProducts)
@@ -23,6 +24,7 @@ func Setup(app *fiber.App) {
 	//cart
 	app.Get("/getCart", cart.GetAllFromUsersCart)
 	app.Post("/addToCart/:order", cart.InsertToCart)
+	app.Patch("/changeQuantity/:order", cart.ChangeQuantity)
 
 	//news
 	app.Get("/getNews", news.GetAllNews)

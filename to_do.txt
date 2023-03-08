@@ -1,5 +1,5 @@
 1. Get request:  /getProduct/:order 
-Example: http://localhost:8000/getProduct/1 Response: json
+Example: http://localhost:8000/getProduct/1Response: json
 {
     "order": 1,
     "name": "Product B",

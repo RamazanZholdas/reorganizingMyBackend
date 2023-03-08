@@ -1,6 +1,8 @@
-package cart
+package authorization
 
 import (
+	"fmt"
+
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/app"
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/jwt"
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/models"
@@ -8,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func GetAllFromUsersCart(c *fiber.Ctx) error {
+func User(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
 	claims, err := jwt.ExtractTokenClaimsFromCookie(cookie)
@@ -22,15 +24,5 @@ func GetAllFromUsersCart(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "User not found"})
 	}
 
-	if len(user.Cart) == 0 {
-		return c.JSON(fiber.Map{"message": "Cart is empty"})
-	}
-
-	var products []models.Product
-	for _, cartItem := range user.Cart {
-		product := cartItem["product"]
-		products = append(products, product)
-	}
-
-	return c.JSON(products)
+	return c.SendString(fmt.Sprint(len(user.Cart)))
 }
