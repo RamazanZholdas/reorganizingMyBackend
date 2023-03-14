@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -12,6 +13,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type App struct {
@@ -68,6 +71,16 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 		utils.LogError(err)
 		return nil, err
 	}
+
+	coll := mongoInstance.Db.Collection(os.Getenv("COLLECTION_PRODUCTS"))
+	model := mongo.IndexModel{Keys: bson.D{{Key: "name", Value: "text"}}}
+	name, err := coll.Indexes().CreateOne(context.TODO(), model)
+	if err != nil {
+		utils.LogError("Error creating index: ", err)
+		return nil, fmt.Errorf("error creating index: %v", err)
+	}
+
+	utils.LogInfo(fmt.Sprintf("Created index %s", name))
 
 	fiberLogFile, err = os.OpenFile("./../../logs/FiberLogs.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {

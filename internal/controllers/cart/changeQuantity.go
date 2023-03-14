@@ -48,11 +48,26 @@ func ChangeQuantity(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Product not found"})
 	}
 
-	for _, item := range user.Cart {
-		var productFromCart models.Product
-		productFromCart = item["product"].(models.Product)
-
+	var productFromCart models.Product
+	for index, item := range user.Cart {
+		productFromCart = item["product"]
+		if productFromCart.Order == int32(number) {
+			if productFromCart.Options[0]["inStock"] < requestBody.Quantity {
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+					"message": "The quantity must be less than or equal to the number of items in stock.",
+				})
+			}
+			productFromCart.Options[0]["quantity"] += requestBody.Quantity
+			user.Cart[index]["product"] = productFromCart
+			err = app.GetMongoInstance().UpdateOne("users", bson.M{"email": claims.Issuer}, bson.M{"$set": bson.M{"cart": user.Cart}})
+			if err != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal server error"})
+			}
+			break
+		}
 	}
 
-	return nil
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "The quantity of the product has been changed successfully.",
+	})
 }

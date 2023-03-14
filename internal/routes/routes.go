@@ -20,6 +20,8 @@ func Setup(app *fiber.App) {
 	app.Get("/getAllItems", product.GetAllProducts)
 	app.Get("/getProduct/:order", product.GetProduct)
 	app.Post("/insertProduct", product.InsertProduct)
+	app.Get("/getAllItems/:productName", product.FindProduct)
+	app.Get("/sortItems/:sortType", product.SortProduct)
 
 	//cart
 	app.Get("/getCart", cart.GetAllFromUsersCart)

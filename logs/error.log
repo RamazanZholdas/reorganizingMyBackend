@@ -69,3 +69,27 @@ ERROR: 2023/03/07 20:36:39 logging.go:52: Error finding one document in products
 ERROR: 2023/03/07 20:36:39 logging.go:52: Error finding one document in products using this filter map[_id:map[product:{ObjectID("64073c95bded0a21276615e5") %!s(int32=1) Product B Brand B This is a sample 2 product. [https://m.media-amazon.com/images/I/71-ZP9hUVVL._AC_SY355_.jpg] Type B [map[option:red optionId:1 price:23 quantity:2]]}]], Error:  mongo: no documents in result
 
 New session started at: 2023-03-08T16:33:49+06:00
+
+New session started at: 2023-03-08T22:01:33+06:00
+
+New session started at: 2023-03-08T22:08:37+06:00
+
+New session started at: 2023-03-09T18:28:21+06:00
+
+New session started at: 2023-03-09T18:31:56+06:00
+ERROR: 2023/03/09 18:32:00 logging.go:52: Error finding products by name results argument must be a pointer to a slice, but was a slice
+
+New session started at: 2023-03-09T18:37:31+06:00
+ERROR: 2023/03/09 18:38:36 logging.go:52: Error finding products by name results argument must be a pointer to a slice, but was a slice
+
+New session started at: 2023-03-09T18:45:51+06:00
+ERROR: 2023/03/09 18:45:55 logging.go:52: Error decoding search result in products using this filter [{$text [{$search "razor"}]}], Error:  results argument must be a pointer to a slice, but was a slice
+
+New session started at: 2023-03-09T18:49:25+06:00
+ERROR: 2023/03/09 18:49:44 logging.go:52: Error decoding search result in products using this filter [{$text [{$search "razor"}]}], Error:  results argument must be a pointer to a slice, but was a pointer to ptr
+
+New session started at: 2023-03-09T18:51:20+06:00
+
+New session started at: 2023-03-09T19:48:26+06:00
+
+New session started at: 2023-03-12T12:20:21+06:00

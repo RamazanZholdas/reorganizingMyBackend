@@ -8,6 +8,7 @@ import (
 	"github.com/RamazanZholdas/KeyboardistSV2/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (m *MongoDB) CreateCollection(collectionName string) error {
@@ -99,4 +100,30 @@ func (m *MongoDB) CountDocuments(collectionName string) (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (m *MongoDB) SortedDocuments(sortOptions bson.M, collectionName string) ([]bson.M, error) {
+	cursor, err := m.Db.Collection(collectionName).Find(context.Background(), bson.M{}, options.Find().SetSort(sortOptions))
+	if err != nil {
+		utils.LogError(fmt.Sprintf("Error sorting documents in %s, Error: ", collectionName), err)
+		return nil, err
+	}
+
+	defer cursor.Close(context.Background())
+
+	var products []bson.M
+	for cursor.Next(context.Background()) {
+		var product bson.M
+		if err := cursor.Decode(&product); err != nil {
+			return nil, err
+		}
+		products = append(products, product)
+	}
+
+	if err := cursor.Err(); err != nil {
+		utils.LogError(fmt.Sprintf("Error sorting documents in %s, Error: ", collectionName), err)
+		return nil, err
+	}
+
+	return products, nil
 }
