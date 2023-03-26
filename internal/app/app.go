@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 	"sync"
@@ -94,9 +95,11 @@ func Intitialize(mongoURI, dbName string) (*App, error) {
 		AllowCredentials: true,
 	}))
 
+	mw := io.MultiWriter(os.Stdout, fiberLogFile)
+
 	fiber.Use(logger.New(logger.Config{
 		Format:     "[${ip}]:${port} ${status} - ${method} ${path}\n",
-		Output:     fiberLogFile,
+		Output:     mw,
 		TimeFormat: time.RFC3339Nano,
 		TimeZone:   "Local",
 	}))

@@ -51,9 +51,9 @@ type PurchaseHistory struct {
 }
 
 type Wiki struct {
-	ID          primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Title       string             `bson:"title,omitempty" json:"title"`
-	Content     string             `bson:"content,omitempty" json:"content"`
-	BannerImage string             `bson:"banner_image,omitempty" json:"banner_image"`
-	Images      primitive.A        `bson:"images,omitempty" json:"images"`
+	ID      primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Order   int32              `bson:"order,omitempty" json:"order"`
+	Title   string             `bson:"title,omitempty" json:"title"`
+	Content string             `bson:"content,omitempty" json:"content"`
+	Images  primitive.A        `bson:"images,omitempty" json:"images"`
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/news"
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/product"
 	servicemaster "github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/service_master"
+	"github.com/RamazanZholdas/KeyboardistSV2/internal/controllers/wiki"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,7 +15,7 @@ func Setup(app *fiber.App) {
 	app.Post("/register", authorization.Register)
 	app.Post("/login", authorization.Login)
 	app.Post("/logout", authorization.Logout)
-	app.Post("/user", authorization.User)
+	app.Get("/user", authorization.User)
 
 	//products
 	app.Get("/getAllItems", product.GetAllProducts)
@@ -37,4 +38,9 @@ func Setup(app *fiber.App) {
 	app.Get("/getAllServiceMasters", servicemaster.GetAllServiceMasters)
 	app.Get("/getServiceMaster/:order", servicemaster.GetServiceMaster)
 	app.Post("/insertServiceMaster", servicemaster.InsertServiceMaster)
+
+	//wiki
+	app.Get("/getAllWikiPages", wiki.GetAllWikiPages)
+	app.Get("/getWikiPage/:order", wiki.GetWikiPage)
+	app.Post("/insertWikiPage", wiki.InsertWikiPage)
 }

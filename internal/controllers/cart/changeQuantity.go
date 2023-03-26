@@ -2,6 +2,7 @@ package cart
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 
 	"github.com/RamazanZholdas/KeyboardistSV2/internal/app"
@@ -51,14 +52,30 @@ func ChangeQuantity(c *fiber.Ctx) error {
 	var productFromCart models.Product
 	for index, item := range user.Cart {
 		productFromCart = item["product"]
+
 		if productFromCart.Order == int32(number) {
 			if productFromCart.Options[0]["inStock"] < requestBody.Quantity {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 					"message": "The quantity must be less than or equal to the number of items in stock.",
 				})
 			}
-			productFromCart.Options[0]["quantity"] += requestBody.Quantity
+
+			oldQuantity, err := strconv.Atoi(productFromCart.Options[0]["quantity"])
+			if err != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal server error"})
+			}
+			newQuantity, err := strconv.Atoi(requestBody.Quantity)
+			if err != nil {
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Request body is invalid"})
+			}
+
+			resultQuantity := oldQuantity + newQuantity
+			productFromCart.Options[0]["quantity"] = strconv.Itoa(resultQuantity)
+
 			user.Cart[index]["product"] = productFromCart
+
+			fmt.Println(productFromCart)
+
 			err = app.GetMongoInstance().UpdateOne("users", bson.M{"email": claims.Issuer}, bson.M{"$set": bson.M{"cart": user.Cart}})
 			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal server error"})

@@ -23,7 +23,6 @@ func init() {
 }
 
 func main() {
-
 	app, err := app.Intitialize(os.Getenv("MONGO_URI"), os.Getenv("DATABASE_NAME"))
 	if err != nil {
 		log.Panic(err)
